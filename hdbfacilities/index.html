@@ -1,289 +1,533 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sec 2 Geography: HDB Facilities Challenge</title>
+
     <style>
+
         :root {
+
             --sg-blue: #005eb8;
+
             --sg-red: #ef3340;
+
             --sg-green: #2ecc71;
+
             --background: #f4f7f6;
+
             --panel: #ffffff;
+
         }
+
+
 
         body {
+
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
             background-color: var(--background);
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             margin: 0;
-            padding: 10px;
+
+            padding: 10px; /* Reduced padding for mobile */
+
             min-height: 100vh;
+
         }
+
+
 
         /* START SCREEN */
+
         #start-screen {
+
             position: fixed;
+
             top: 0; left: 0; width: 100%; height: 100%;
+
             background: var(--sg-blue);
+
             color: white;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             align-items: center;
+
             z-index: 200;
+
             text-align: center;
+
             padding: 20px;
+
             box-sizing: border-box;
+
         }
+
+
 
         /* GAME LAYOUT */
+
         #game-layout {
+
             display: none;
+
             flex-direction: column;
+
             align-items: center;
-            width: 95%;
+
+            width: 95%; /* Responsive width */
+
             max-width: 900px;
+
             gap: 15px;
+
         }
+
+
 
         #ui-layer {
+
             width: 100%;
+
             display: flex;
+
             justify-content: space-between;
-            align-items: center;
+
             background: var(--panel);
+
             padding: 15px;
+
             border-radius: 8px;
+
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+
             box-sizing: border-box;
+
         }
+
+
 
         #game-image {
+
             width: 100%;
-            height: auto;
+
+            height: auto; /* Maintains aspect ratio */
+
             border-radius: 8px;
+
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+
         }
+
+
 
         /* INPUT AREA */
+
         #input-container {
+
             width: 100%;
+
             background: var(--panel);
+
             padding: 20px;
+
             border-radius: 8px;
+
             text-align: center;
+
             box-sizing: border-box;
+
         }
 
+
+
         input[type="text"] {
-            width: 100%;
+
+            width: 100%; /* Full width on mobile */
+
             max-width: 600px;
+
             padding: 12px;
+
             font-size: 1.2rem;
+
             border: 3px solid #ddd;
+
             border-radius: 10px;
+
             outline: none;
+
             text-align: center;
+
             box-sizing: border-box;
+
         }
+
+
 
         input[type="text"]:focus { border-color: var(--sg-blue); }
 
+
+
         #last-found {
+
             margin-top: 15px;
+
             font-weight: bold;
+
             min-height: 1.5em;
+
             font-size: 1rem;
+
         }
+
+
 
         .success-text { color: var(--sg-green); }
+
         .error-text { color: var(--sg-red); }
 
-        /* BUTTONS */
-        .big-btn {
-            padding: 15px 35px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 50px;
-            border: none;
-            background: white;
-            color: var(--sg-blue);
-            font-weight: bold;
-            margin: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
 
-        .home-btn {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            background: #eee;
-            color: #333;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            border: 1px solid #ccc;
-        }
-
-        .home-btn:hover { background: #ddd; }
 
         /* MODAL */
+
         #modal-overlay {
+
             display: none;
+
             position: fixed;
+
             top: 0; left: 0; width: 100%; height: 100%;
+
             background: rgba(0,0,0,0.95);
+
             z-index: 300;
+
             justify-content: center;
+
             align-items: center;
+
             flex-direction: column;
+
             color: white;
+
             text-align: center;
+
             padding: 20px;
+
         }
+
+
+
+        .big-btn {
+
+            padding: 15px 35px;
+
+            font-size: 1.2rem;
+
+            cursor: pointer;
+
+            border-radius: 50px;
+
+            border: none;
+
+            background: white;
+
+            color: var(--sg-blue);
+
+            font-weight: bold;
+
+        }
+
+
 
         .credits {
+
             margin-top: 50px;
+
             padding-bottom: 40px;
+
             font-size: 0.85rem;
+
             color: #7f8c8d;
+
             text-align: center;
+
             width: 100%;
+
         }
+
+
 
         /* MOBILE OPTIMIZATIONS */
+
         @media (max-width: 600px) {
+
             h1 { font-size: 1.5rem; }
-            #ui-layer { font-size: 0.9rem; flex-direction: column; gap: 10px; text-align: center; }
+
+            #ui-layer { font-size: 0.9rem; flex-direction: column; gap: 5px; text-align: center; }
+
             input[type="text"] { font-size: 1rem; }
+
             #modal-title { font-size: 2rem; }
+
         }
+
     </style>
+
 </head>
+
 <body>
 
+
+
     <div id="start-screen">
+
         <h1>HDB Facilities Challenge</h1>
+
         <p style="max-width: 500px; line-height: 1.6;">
+
             Find <b>7 facilities</b> in the HDB estate that you will see.<br><br>
+
             You have <b>60 seconds</b>. Type the name of one facility at a time and press <b>ENTER</b> to submit each response.
+
         </p>
+
         <button class="big-btn" onclick="startGame()">START GAME</button>
+
     </div>
+
+
 
     <div id="game-layout">
+
         <div id="ui-layer">
-            <a href="https://geographerstace.github.io/sec2geog/" class="home-btn">🏠 Home</a>
+
             <div>Time Remaining: <span id="timer" style="color:var(--sg-red); font-weight:bold;">60</span>s</div>
+
             <div>Found: <span id="score" style="color:var(--sg-green); font-weight:bold;">0</span> / 7</div>
+
         </div>
 
-        <img src="Original.png" id="game-image" alt="HDB Estate">
+
+
+        <img src="Original.png" id="game-image">
+
+
 
         <div id="input-container">
-            <input type="text" id="answer-input" placeholder="Type a facility and press Enter..." autocomplete="off">
+
+            <input type="text" id="answer-input" placeholder="Type the name of one facility at a time and press Enter..." autocomplete="off">
+
             <div id="last-found"></div>
+
         </div>
+
     </div>
+
+
 
     <div id="modal-overlay">
+
         <h2 id="modal-title"></h2>
+
         <p id="modal-body"></p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-            <button class="big-btn" onclick="location.reload()">Try Again</button>
-            <a href="https://geographerstace.github.io/sec2geog/" class="big-btn" style="background: var(--sg-blue); color: white;">Back to Site</a>
-        </div>
+
+        <button class="big-btn" onclick="location.reload()">Try Again</button>
+
     </div>
+
+
 
     <div class="credits">
+
         Created by <a href="https://instagram.com/geographer.stace" target="_blank" style="color: #3498db; text-decoration: none;">@geographer.stace</a>
+
     </div>
 
+
+
     <script>
+
         const facilities = [
+
             "School", "Multipurpose Hall", "Sports Court", "Bus Stop", 
+
             "Playground", "Hawker Centre", "Train Station",
+
         ];
+
         
+
         let foundItems = [];
+
         let timeLeft = 60;
+
         let timerId;
 
+
+
         function startGame() {
+
             document.getElementById('start-screen').style.display = 'none';
+
             document.getElementById('game-layout').style.display = 'flex';
+
             document.getElementById('answer-input').focus();
+
             
+
             timerId = setInterval(() => {
+
                 timeLeft--;
+
                 document.getElementById('timer').textContent = timeLeft;
+
                 if (timeLeft <= 0) endGame(false);
+
             }, 1000);
+
         }
+
+
 
         const inputField = document.getElementById('answer-input');
+
         const feedback = document.getElementById('last-found');
 
+
+
         inputField.addEventListener('keydown', (e) => {
+
             if (e.key === 'Enter') {
+
                 checkAnswer(inputField.value.toLowerCase().trim());
+
             }
+
         });
 
+
+
         function checkAnswer(val) {
+
             if (val.length < 3) return;
+
             let matchFound = false;
 
+
+
             facilities.forEach((item) => {
+
                 if (foundItems.includes(item)) return;
+
                 const itemLower = item.toLowerCase();
+
                 const keywords = itemLower.split(' ');
 
+
+
                 if (itemLower.includes(val) || val.includes(keywords[0])) {
+
                     if (val.length >= Math.min(itemLower.length - 2, 4) || keywords.includes(val)) {
+
                         processCorrectAnswer(item);
+
                         matchFound = true;
+
                     }
+
                 }
+
             });
 
+
+
             if (!matchFound && val !== "") {
+
                 showFeedback(`"${inputField.value}" not recognized.`, "error-text");
+
                 inputField.value = "";
+
             }
+
         }
+
+
 
         function processCorrectAnswer(item) {
+
             foundItems.push(item);
+
             inputField.value = ""; 
+
             document.getElementById('score').textContent = foundItems.length;
+
             showFeedback(`Correct! Found the ${item}.`, "success-text");
+
             if (foundItems.length === 7) endGame(true);
+
         }
+
+
 
         function showFeedback(text, className) {
+
             feedback.textContent = text;
+
             feedback.className = className;
+
             setTimeout(() => { feedback.textContent = ""; }, 1500);
+
         }
 
+
+
         function endGame(win) {
+
             clearInterval(timerId);
+
             const modal = document.getElementById('modal-overlay');
+
             modal.style.display = 'flex';
+
             
+
             if (win) {
+
                 document.getElementById('modal-title').textContent = "Excellent!";
+
                 document.getElementById('modal-body').innerHTML = "You found all 7 facilities!<br><br>Secret Code: <b>IMAHDBPRO</b>";
+
             } else {
+
                 document.getElementById('modal-title').textContent = "Time's Up!";
+
                 document.getElementById('modal-body').textContent = "You've run out of time. Try again next time!";
+
             }
+
         }
+
     </script>
+
 </body>
+
 </html>
